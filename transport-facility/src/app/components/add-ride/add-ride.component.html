@@ -9,6 +9,10 @@
       </label>
       <label>Vehicle No
         <input formControlName="vehicleNo" placeholder="e.g. MH34VB1000" />
+        <div *ngIf="form.get('vehicleNo')?.touched && form.get('vehicleNo')?.invalid" style="color:#b00020;font-size:12px;margin-top:4px;">
+          <span *ngIf="form.get('vehicleNo')?.errors?.['required']">Vehicle number is required.</span>
+          <span *ngIf="form.get('vehicleNo')?.errors?.['pattern']">Invalid format. Example: MH34VB1000</span>
+        </div>
       </label>
       <label>Vacant Seats
         <input type="number" formControlName="vacantSeats" />

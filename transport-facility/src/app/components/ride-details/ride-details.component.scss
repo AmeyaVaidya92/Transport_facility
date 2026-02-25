@@ -1,0 +1,15 @@
+.modal-backdrop {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+}
+.modal {
+  position: fixed;
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+  background: #fff; padding: 18px; border-radius: 10px; width: 360px; box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+}
+.modal h3 { margin: 0 0 8px 0; color: #222 }
+.modal p { margin: 6px 0; color: #555 }
+.modal .actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px }
+button { padding: 8px 12px; border-radius:6px; border:none; background:#1976d2; color:#fff }
+.modal button[disabled] { background:#9fbbe6 }

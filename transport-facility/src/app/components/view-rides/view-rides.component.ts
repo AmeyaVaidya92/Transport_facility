@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Ride } from '../../models/ride.model';
 import { RideService } from '../../services/ride.service';
 import { AuthService } from '../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-view-rides',
@@ -14,8 +15,14 @@ export class ViewRidesComponent implements OnInit {
   vehicleFilter: 'All' | 'Bike' | 'Car' = 'All';
   selectedTime = '';
   timeSlots: string[] = [];
+  cities: string[] = [];
+  filteredOrigins: string[] = [];
+  filteredDestinations: string[] = [];
+  origin = '';
+  destination = '';
+  selectedRide: Ride | null = null;
 
-  constructor(private rides: RideService, private auth: AuthService) {}
+  constructor(private rides: RideService, private auth: AuthService, private http: HttpClient) {}
 
   ngOnInit(): void {
     // default selected time is current time (rounded to nearest quarter)
@@ -27,7 +34,22 @@ export class ViewRidesComponent implements OnInit {
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
     this.selectedTime = `${hh}:${mm}`;
+    this.loadCities();
     this.reload(false);
+  }
+
+  private loadCities() {
+    this.http.get<string[]>('/assets/india-cities.json').subscribe({ next: data => { this.cities = data || []; this.filteredOrigins = this.cities; this.filteredDestinations = this.cities; }, error: () => { this.cities = []; } });
+  }
+
+  filterOrigins(q: string) {
+    const input = (q || '').toLowerCase();
+    this.filteredOrigins = this.cities.filter(c => c.toLowerCase().includes(input)).slice(0, 20);
+  }
+
+  filterDestinations(q: string) {
+    const input = (q || '').toLowerCase();
+    this.filteredDestinations = this.cities.filter(c => c.toLowerCase().includes(input)).slice(0, 20);
   }
 
   private buildTimeSlots() {
@@ -58,6 +80,8 @@ export class ViewRidesComponent implements OnInit {
     base.setHours(selH, selM, 0, 0);
     this.displayed = this.all.filter(r => {
       if (this.vehicleFilter !== 'All' && r.vehicleType !== this.vehicleFilter) { return false; }
+      if (this.origin && r.pickUp !== this.origin) { return false; }
+      if (this.destination && r.destination !== this.destination) { return false; }
       if (r.vacantSeats <= 0) { return false; }
       const [hh, mm] = (r.time || '00:00').split(':').map(s => Number(s.trim()));
       const rideDate = new Date();
@@ -90,5 +114,13 @@ export class ViewRidesComponent implements OnInit {
     if (!res.ok) { alert(res.message || 'Booking failed'); return; }
     alert('Booked successfully');
     this.reload(true);
+  }
+
+  openDetails(r: Ride) {
+    this.selectedRide = r;
+  }
+
+  closeDetails() {
+    this.selectedRide = null;
   }
 }

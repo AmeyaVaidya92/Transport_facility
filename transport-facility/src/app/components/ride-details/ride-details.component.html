@@ -1,0 +1,17 @@
+<div class="modal-backdrop" (click)="onClose()"></div>
+<div class="modal">
+  <h3>Ride Details</h3>
+  <div *ngIf="ride">
+    <p><strong>{{ ride.vehicleType }} - {{ ride.vehicleNo }}</strong></p>
+    <p>By: {{ ride.creatorId }}</p>
+    <p>From: {{ ride.pickUp }} → {{ ride.destination }}</p>
+    <p>Time: {{ ride.time }}</p>
+    <p>Seats left: {{ ride.vacantSeats }}</p>
+    <p>Bookings: {{ ride.bookings.length }}</p>
+  </div>
+
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+    <button (click)="onClose()">Close</button>
+    <button [disabled]="!canBook()" (click)="doBook()">Book</button>
+  </div>
+</div>
