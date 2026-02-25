@@ -1,0 +1,46 @@
+<div style="max-width:640px;margin:40px auto;padding:16px;border:1px solid #eee;border-radius:6px;">
+  <h2>Add Ride</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <label>Vehicle Type
+        <select formControlName="vehicleType">
+          <option *ngFor="let t of vehicleTypes">{{ t }}</option>
+        </select>
+      </label>
+      <label>Vehicle No
+        <input formControlName="vehicleNo" placeholder="e.g. MH34VB1000" />
+      </label>
+      <label>Vacant Seats
+        <input type="number" formControlName="vacantSeats" />
+        <div *ngIf="form.get('vacantSeats')?.errors?.['max']">Must be less than 10</div>
+      </label>
+    </div>
+
+    <div style="margin-top:8px;">
+      <label>Time (HH:mm)</label>
+      <select formControlName="time">
+        <option *ngFor="let s of timeSlots">{{ s }}</option>
+      </select>
+    </div>
+
+    <div style="margin-top:8px;display:flex;gap:8px;">
+      <label style="flex:1">Pick-up
+        <input formControlName="pickUp" (input)="filterPickups($any($event.target).value)" list="pickup-list" />
+        <datalist id="pickup-list">
+          <option *ngFor="let c of filteredPickups" [value]="c"></option>
+        </datalist>
+      </label>
+      <label style="flex:1">Destination
+        <input formControlName="destination" (input)="filterDestinations($any($event.target).value)" list="dest-list" />
+        <datalist id="dest-list">
+          <option *ngFor="let c of filteredDestinations" [value]="c"></option>
+        </datalist>
+      </label>
+    </div>
+
+    <div style="margin-top:12px;">
+      <button type="submit" [disabled]="form.invalid">Add Ride</button>
+      <small *ngIf="form.invalid" style="margin-left:8px;color:#666">Fill all mandatory fields correctly</small>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,38 @@
+<div style="max-width:880px;margin:24px auto;padding:12px;">
+  <h2>Available Rides</h2>
+
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+    <label>Vehicle Filter
+      <select [(ngModel)]="vehicleFilter" (change)="applyFilters()">
+        <option>All</option>
+        <option>Bike</option>
+        <option>Car</option>
+      </select>
+    </label>
+    <label>Time
+      <select [(ngModel)]="selectedTime" (change)="applyFilters()">
+        <option *ngFor="let s of timeSlots">{{ s }}</option>
+      </select>
+    </label>
+    <button (click)="reload(false)">Refresh</button>
+  </div>
+
+  <div *ngIf="displayed.length === 0">No matching rides within ±60 minutes.</div>
+
+  <div *ngFor="let r of displayed" style="border:1px solid #eee;padding:8px;margin:8px 0;border-radius:6px;">
+    <div style="display:flex;justify-content:space-between;">
+      <div>
+        <strong>{{ r.vehicleType }} - {{ r.vehicleNo }}</strong>
+        <div>By: {{ r.creatorId }}</div>
+        <div>From: {{ r.pickUp }} → {{ r.destination }}</div>
+      </div>
+      <div style="text-align:right;">
+        <div>Time: {{ formattedTime(r.time) }}</div>
+        <div>Seats: {{ r.vacantSeats }}</div>
+        <div style="margin-top:6px;">
+          <button [disabled]="!canBook(r)" (click)="book(r)">Book</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
