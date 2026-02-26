@@ -51,7 +51,7 @@
   flex-direction: column;
   flex: 1;
   min-width: 200px;
-  margin-bottom: 12px; /* ensure vertical spacing between fields regardless of errors */
+  margin-bottom: 12px; /* space between fields */
 }
 
 .flex-1 {
@@ -103,7 +103,7 @@ select:focus {
   color: #b00020;
   font-size: 12px;
   margin-top: 4px;
-  min-height: 18px; /* reserve space so the layout doesn't jump when message appears */
+  min-height: 18px; /* u.i breaking when we get error so min-height */
 }
 
 /* Buttons */

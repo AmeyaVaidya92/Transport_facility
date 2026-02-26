@@ -4,7 +4,7 @@
     Where are you headed today? Share your journey and help colleagues travel smarter.
   </p>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+  <form [formGroup]="form" >
 
     <!-- Vehicle Type -->
     <div class="row">
@@ -136,7 +136,7 @@
       <button
         type="submit"
         [ngClass]="{ 'btn-enabled': form.valid, 'btn-disabled': form.invalid }"
-        [disabled]="form.invalid"
+        [disabled]="form.invalid" (click)="submit()"
       >
         Post My Ride
       </button>

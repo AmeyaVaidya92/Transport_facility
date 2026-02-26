@@ -29,7 +29,6 @@ export class RideListComponent implements OnInit {
   constructor(private rides: RideService, private auth: AuthService, private http: HttpClient) {}
 
   ngOnInit(): void {
-    // set default search time to current time (user can change to any time)
     const now = new Date();
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
@@ -42,7 +41,6 @@ export class RideListComponent implements OnInit {
     this.http.get<string[]>('/assets/india-cities.json').subscribe({
       next: data => {
         this.cities = (data || []).slice().sort((a, b) => a.localeCompare(b));
-        // do not populate suggestions until user types
         this.filteredOrigins = [];
         this.filteredDestinations = [];
       },

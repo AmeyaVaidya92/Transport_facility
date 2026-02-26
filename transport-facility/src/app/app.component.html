@@ -1,21 +1,29 @@
-<header class="app-toolbar" role="banner">
-	<div class="brand">Transport Facility</div>
-	<nav>
-		<a routerLink="/login">Login</a>
-		<a routerLink="/add-ride">Add Ride</a>
-		<a routerLink="/rides">Available Rides</a>
-	</nav>
-	<div class="spacer"></div>
-	<div class="user-info">
-		<span *ngIf="auth.isLoggedIn()">{{ auth.getCurrentUser() }}</span>
-		<button *ngIf="auth.isLoggedIn()" (click)="logout()">Logout</button>
-	</div>
-</header>
 
+<header class="app-toolbar" role="banner">
+  <div class="app-name">GoRide</div>
+
+  <nav>
+    <!-- before login -->
+    <a routerLink="/login" *ngIf="!auth.isLoggedIn()">Login</a>
+
+    <!-- after login -->
+    <a routerLink="/add-ride" *ngIf="auth.isLoggedIn()">Add Ride</a>
+    <a routerLink="/rides" *ngIf="auth.isLoggedIn()">Available Rides</a>
+  </nav>
+
+  <div class="spacer"></div>
+
+  <div class="user-info">
+    <span *ngIf="auth.isLoggedIn()">
+      {{ auth.getCurrentUser() }}
+    </span>
+
+    <button *ngIf="auth.isLoggedIn()" (click)="logout()">
+      Logout
+    </button>
+  </div>
+</header>
 <main>
 	<router-outlet></router-outlet>
 </main>
 
-<!-- <footer class="app-footer">
-	<p>&copy; 2026 Transport Facility. Ride share made simple.</p>
-</footer> -->

@@ -1,85 +1,147 @@
 :host {
-	display: block;
-	font-family: Arial, Helvetica, sans-serif;
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .rides-container {
-	max-width: 1000px;
-	margin: 24px auto;
-	padding: 12px;
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 12px;
 }
 
-.hero {
-	text-align: center;
-	margin-bottom: 24px;
+.view-ride {
+  text-align: center;
+  margin-bottom: 24px;
 }
-.hero h1 {
-	font-size: 28px;
-	margin-bottom: 8px;
-	color: #1976d2;
+.view-ride h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  color: #1976d2;
 }
-.hero p {
-	font-size: 15px;
-	color: #555;
-	max-width: 680px;
-	margin: 0 auto;
-}
-
-.hero-features {
-	list-style-type: disc;
-	margin: 12px auto 0;
-	padding-left: 20px;
-	max-width: 600px;
-	color: #444;
-	font-size: 14px;
+.view-ride p {
+  font-size: 15px;
+  color: #555;
+  max-width: 680px;
+  margin: 0 auto;
 }
 
-.hero-features li { margin-bottom: 4px; }
+.view-ride-features {
+  list-style-type: disc;
+  margin: 12px auto 0;
+  padding-left: 20px;
+  max-width: 600px;
+  color: #444;
+  font-size: 14px;
+}
+
+.view-ride-features li {
+  margin-bottom: 4px;
+}
 
 .search-panel {
-	display: flex;
-	gap: 12px;
-	align-items: center;
-	margin-bottom: 12px;
-	flex-wrap: wrap;
-	background: #fff;
-	padding: 12px;
-	border-radius: 8px;
-	box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.search-panel label { display: block; font-size: 13px; color: #444; }
-.search-panel .search-field { flex: 1; min-width: 160px; }
-.search-panel input, .search-panel select { padding: 8px; border-radius: 4px; border: 1px solid #e0e0e0; }
+.search-panel label {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 160px;
+  font-size: 13px;
+  color: #444;
+}
+.search-panel .search-field {
+  flex: 1;
+  min-width: 160px;
+}
+.search-panel input,
+.search-panel select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
 
-.actions { display:flex; gap:8px }
+.actions {
+  display: flex;
+  gap: 8px;
+}
 
 .ride-card {
-	display:flex;
-	justify-content:space-between;
-	align-items:center;
-	padding: 14px;
-	border-radius:8px;
-	background: #fff;
-	box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-	margin: 10px 0;
-	cursor: pointer;
-	transition: transform .12s ease, box-shadow .12s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  margin: 10px 0;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
 }
-.ride-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+.ride-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
 
-.card-left { max-width: 70%; }
-.card-left strong { display:block; font-size:16px; color:#222 }
-.card-left div { font-size:13px; color:#666 }
+.card-left {
+  max-width: 70%;
+}
+.card-left strong {
+  display: block;
+  font-size: 16px;
+  color: #222;
+}
+.card-left div {
+  font-size: 13px;
+  color: #666;
+}
 
- .card-right { text-align:right }
- .time { font-weight:600; color:#1976d2 }
- .seats { margin-top:6px; color:#444 }
- 
- .book-button-wrapper { margin-top:8px; }
+.card-right {
+  text-align: right;
+}
+.time {
+  font-weight: 600;
+  color: #1976d2;
+}
+.seats {
+  margin-top: 6px;
+  color: #444;
+}
 
- button[disabled] { opacity: 0.5; }
- button { padding: 8px 12px; border-radius:6px; border:none; background:#1976d2; color:#fff }
+.book-button-wrapper {
+  margin-top: 8px;
+}
 
-.no-rides { color: #666; padding: 18px; text-align:center }
+button[disabled] {
+  opacity: 0.5;
+}
+button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #1976d2;
+  color: #fff;
+}
 
+.no-rides {
+  color: #666;
+  padding: 18px;
+  text-align: center;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 2px rgba(25, 118, 210, 0.5);
+}

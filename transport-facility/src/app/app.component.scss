@@ -14,7 +14,7 @@
 	flex-wrap: wrap; /* allow wrapping on small screens */
 }
 
-.app-toolbar .brand {
+.app-toolbar .app-name {
 	font-weight: 600;
 }
 .app-toolbar nav {
@@ -35,6 +35,22 @@
 	align-items: center;
 }
 
+/* Global form focus styling */
+
+input,
+select,
+textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #1976d2 !important;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
 /* stack toolbar items on narrow devices */
 @media (max-width: 600px) {
 	.app-toolbar {
@@ -48,13 +64,7 @@
 	}
 }
 
-.app-footer {
-	text-align: center;
-	padding: 12px 0;
-	color: #666;
-	font-size: 13px;
-	margin-top: 24px;
-}
+
 
 main {
 	padding: 0 12px;
