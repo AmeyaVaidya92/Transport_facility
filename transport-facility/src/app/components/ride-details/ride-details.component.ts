@@ -23,20 +23,20 @@ export class RideDetailsComponent {
   ) {}
 
   canBook(): boolean {
-  const user = this.auth.getCurrentUser();
+    const user = this.auth.getCurrentUser();
 
-  if (
-    !this.ride ||
-    !user ||
-    this.ride.creatorId === user ||
-    this.ride.bookings.includes(user) ||
-    this.ride.vacantSeats <= 0
-  ) {
-    return false;
+    if (
+      !this.ride ||
+      !user ||
+      this.ride.creatorId === user ||
+      this.ride.bookings.includes(user) ||
+      this.ride.vacantSeats <= 0
+    ) {
+      return false;
+    }
+
+    return true;
   }
-
-  return true;
-}
 
   doBook() {
     if (!this.ride) {
