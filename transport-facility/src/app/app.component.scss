@@ -1,11 +1,62 @@
-( :host ) {
-	display:block; font-family: Arial, Helvetica, sans-serif;
+/* global base style for root component */
+:host {
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .app-toolbar {
-	background: linear-gradient(90deg,#1976d2,#1e88e5);
-	color: #fff; padding:12px 16px; display:flex; align-items:center; gap:16px;
+	background: linear-gradient(90deg, #1976d2, #1e88e5);
+	color: #fff;
+	padding: 12px 16px;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap; /* allow wrapping on small screens */
 }
-.app-toolbar a { color: rgba(255,255,255,0.9); text-decoration:none }
-.app-toolbar .spacer { flex:1 }
+
+.app-toolbar .brand {
+	font-weight: 600;
+}
+.app-toolbar nav {
+	display: flex;
+	gap: 12px;
+}
+.app-toolbar a {
+	color: rgba(255, 255, 255, 0.9);
+	text-decoration: none;
+	font-size: 14px;
+}
+.app-toolbar .spacer {
+	flex: 1;
+}
+.app-toolbar .user-info {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+/* stack toolbar items on narrow devices */
+@media (max-width: 600px) {
+	.app-toolbar {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.app-toolbar nav {
+		margin-top: 8px;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+}
+
+.app-footer {
+	text-align: center;
+	padding: 12px 0;
+	color: #666;
+	font-size: 13px;
+	margin-top: 24px;
+}
+
+main {
+	padding: 0 12px;
+}
 

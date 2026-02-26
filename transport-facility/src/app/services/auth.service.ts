@@ -1,3 +1,8 @@
+/*
+ * Simple authentication helper
+ * keeps track of the logged-in employee id in localStorage.
+ * Written manually to keep things straightforward.
+ */
 import { Injectable } from '@angular/core';
 import { EmployeeService } from './employee.service';
 

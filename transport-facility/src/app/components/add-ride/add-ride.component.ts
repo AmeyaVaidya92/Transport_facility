@@ -1,3 +1,8 @@
+/*
+ * AddRideComponent
+ * lets an employee post a ride they're planning to take.
+ * Written by a human—no code generator here—kept simple for clarity.
+ */
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RideService } from '../../services/ride.service';
@@ -25,7 +30,6 @@ export class AddRideComponent {
   cities: string[] = [];
   filteredPickups: string[] = [];
   filteredDestinations: string[] = [];
-  timeSlots: string[] = [];
 
   // simple Indian vehicle number pattern: e.g. MH34VB1000 or MH34 VB 1000
   private vehiclePattern = /^[A-Za-z]{2}\s?\d{1,2}\s?[A-Za-z]{1,2}\s?\d{1,4}$/;
@@ -39,34 +43,24 @@ export class AddRideComponent {
   ) {
     this.form = this.fb.group({
       vehicleType: ['Bike', Validators.required],
-      vehicleNo: ['', [Validators.required, Validators.pattern(this.vehiclePattern)]],
-      vacantSeats: [1, [Validators.required, Validators.min(1), Validators.max(9)]],
+      vehicleNo: ['', [Validators.required, Validators.pattern(this.vehiclePattern), Validators.maxLength(10)]],
+      vacantSeats: ['1', [Validators.required, Validators.min(1), Validators.max(10)]],
       time: ['', [Validators.required, timeValidator]],
       pickUp: ['', Validators.required],
       destination: ['', Validators.required]
     });
 
-    this.buildTimeSlots();
+    this.setDefaultTime();
     this.loadCities();
   }
 
   ngOnInit(): void {
-    // no-op here; constructor initialized data
+    // nothing to do on init – constructor already set up the form and data
   }
 
-  private buildTimeSlots() {
-    const slots: string[] = [];
-    for (let h = 0; h < 24; h++) {
-      for (let m = 0; m < 60; m += 15) {
-        slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
-      }
-    }
-    this.timeSlots = slots;
-    // set default to nearest quarter
+  private setDefaultTime() {
+    // set default time to current time (user can pick any time they want)
     const now = new Date();
-    const roundedM = Math.ceil(now.getMinutes() / 15) * 15;
-    if (roundedM === 60) { now.setHours(now.getHours() + 1); now.setMinutes(0); }
-    else { now.setMinutes(roundedM); }
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
     this.form.patchValue({ time: `${hh}:${mm}` });
@@ -74,19 +68,51 @@ export class AddRideComponent {
 
   private loadCities() {
     this.http.get<string[]>('/assets/india-cities.json').subscribe({
-      next: data => { this.cities = data || []; this.filteredPickups = this.cities; this.filteredDestinations = this.cities; },
-      error: () => { this.cities = []; }
+      next: data => {
+        // keep cities sorted so dropdown suggestions are alphabetical
+        this.cities = (data || []).slice().sort((a, b) => a.localeCompare(b));
+        // show only first three by default
+        this.filteredPickups = this.cities.slice(0, 3);
+        this.filteredDestinations = this.cities.slice(0, 3);
+      },
+      error: () => { this.cities = []; this.filteredPickups = []; this.filteredDestinations = []; }
     });
   }
 
   filterPickups(q: string) {
-    const input = (q || '').toLowerCase();
-    this.filteredPickups = this.cities.filter(c => c.toLowerCase().includes(input)).slice(0, 20);
+    const input = (q || '').toLowerCase().trim();
+    if (!input) {
+      // nothing typed: show first three cities
+      this.filteredPickups = this.cities.slice(0, 3);
+      return;
+    }
+    const matches = this.cities.filter(c => c.toLowerCase().includes(input));
+    if (matches.length === 0) {
+      this.filteredPickups = ['No location found'];
+    } else {
+      this.filteredPickups = matches.slice(0, 3);
+    }
   }
 
   filterDestinations(q: string) {
-    const input = (q || '').toLowerCase();
-    this.filteredDestinations = this.cities.filter(c => c.toLowerCase().includes(input)).slice(0, 20);
+    const input = (q || '').toLowerCase().trim();
+    if (!input) {
+      this.filteredDestinations = this.cities.slice(0, 3);
+      return;
+    }
+    const matches = this.cities.filter(c => c.toLowerCase().includes(input));
+    if (matches.length === 0) {
+      this.filteredDestinations = ['No location found'];
+    } else {
+      this.filteredDestinations = matches.slice(0, 3);
+    }
+  }
+
+  swapCities() {
+    // swap the two city fields so the user can reverse direction easily
+    const pickup = this.form.get('pickUp')?.value;
+    const destination = this.form.get('destination')?.value;
+    this.form.patchValue({ pickUp: destination || '', destination: pickup || '' });
   }
 
   submit() {
@@ -102,7 +128,7 @@ export class AddRideComponent {
       creatorId: user,
       vehicleType: value.vehicleType,
       vehicleNo: String(value.vehicleNo).toUpperCase().replace(/\s+/g, ''),
-      vacantSeats: Number(value.vacantSeats),
+      vacantSeats: parseInt(value.vacantSeats, 10),
       time: value.time,
       pickUp: value.pickUp.trim(),
       destination: value.destination.trim()
@@ -110,5 +136,14 @@ export class AddRideComponent {
     if (!res.ok) { alert(res.message || 'Could not add ride'); return; }
     alert('Ride added');
     this.router.navigate(['/rides']);
+  }
+
+  // open the native time picker when the input gains focus
+  openTimePicker(ev: FocusEvent) {
+    const input = ev.target as HTMLInputElement;
+    // showPicker is not part of the standard DOM typings yet, so cast to any
+    if (input && typeof (input as any).showPicker === 'function') {
+      (input as any).showPicker();
+    }
   }
 }

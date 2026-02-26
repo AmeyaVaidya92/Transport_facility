@@ -1,14 +1,27 @@
-<div style="max-width:880px;margin:24px auto;padding:12px;">
+<div class="rides-container">
+  <section class="hero">
+    <h1>Find a ride, share the cost</h1>
+    <p>Whether you're commuting or travelling between cities, connect with fellow employees and make your journey easier and greener.</p>
+    <ul class="hero-features">
+      <li>Save money on trips</li>
+      <li>Flexible timings, friendly company</li>
+      <li>Reduce your carbon footprint</li>
+    </ul>
+  </section>
   <h2>Available Rides</h2>
 
   <div class="search-panel">
-    <label style="flex:1;min-width:160px">Origin
+    <label class="search-field">Origin
       <input [(ngModel)]="origin" (input)="filterOrigins($any($event.target).value)" list="origin-list" placeholder="Start city" />
-      <datalist id="origin-list"><option *ngFor="let c of filteredOrigins" [value]="c"></option></datalist>
+      <datalist id="origin-list">
+        <option *ngFor="let c of filteredOrigins" [value]="c" [disabled]="c==='No location found'"></option>
+      </datalist>
     </label>
-    <label style="flex:1;min-width:160px">Destination
+    <label class="search-field">Destination
       <input [(ngModel)]="destination" (input)="filterDestinations($any($event.target).value)" list="dest-list" placeholder="Destination city" />
-      <datalist id="dest-list"><option *ngFor="let c of filteredDestinations" [value]="c"></option></datalist>
+      <datalist id="dest-list">
+        <option *ngFor="let c of filteredDestinations" [value]="c" [disabled]="c==='No location found'"></option>
+      </datalist>
     </label>
     <label>Vehicle
       <select [(ngModel)]="vehicleFilter">
@@ -17,10 +30,8 @@
         <option>Car</option>
       </select>
     </label>
-    <label>Time
-      <select [(ngModel)]="selectedTime">
-        <option *ngFor="let s of timeSlots">{{ s }}</option>
-      </select>
+    <label>Time (any time)
+      <input type="time" [(ngModel)]="selectedTime" />
     </label>
     <div class="actions">
       <button (click)="applyFilters()">Search</button>
@@ -28,7 +39,7 @@
     </div>
   </div>
 
-  <div *ngIf="displayed.length === 0">No rides to show.</div>
+  <div *ngIf="displayed.length === 0" class="no-rides">No rides to show.</div>
 
   <div *ngFor="let r of displayed" class="ride-card" (click)="openDetails(r)">
     <div class="card-left">
@@ -39,7 +50,7 @@
     <div class="card-right">
       <div class="time">{{ formattedTime(r.time) }}</div>
       <div class="seats">Seats: {{ r.vacantSeats }}</div>
-      <div style="margin-top:8px;">
+      <div class="book-button-wrapper">
         <button (click)="book(r); $event.stopPropagation()" [disabled]="!canBook(r)">Book</button>
       </div>
     </div>

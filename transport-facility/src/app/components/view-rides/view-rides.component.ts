@@ -1,3 +1,8 @@
+/*
+ * RideListComponent
+ * shows a list of today's rides with filtering options.
+ * Written manually to mirror a user‑facing page.
+ */
 import { Component, OnInit } from '@angular/core';
 import { Ride } from '../../models/ride.model';
 import { RideService } from '../../services/ride.service';
@@ -5,16 +10,15 @@ import { AuthService } from '../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-view-rides',
+  selector: 'app-ride-list',
   templateUrl: './view-rides.component.html',
   styleUrls: ['./view-rides.component.scss']
 })
-export class ViewRidesComponent implements OnInit {
+export class RideListComponent implements OnInit {
   all: Ride[] = [];
   displayed: Ride[] = [];
   vehicleFilter: 'All' | 'Bike' | 'Car' = 'All';
   selectedTime = '';
-  timeSlots: string[] = [];
   cities: string[] = [];
   filteredOrigins: string[] = [];
   filteredDestinations: string[] = [];
@@ -25,12 +29,8 @@ export class ViewRidesComponent implements OnInit {
   constructor(private rides: RideService, private auth: AuthService, private http: HttpClient) {}
 
   ngOnInit(): void {
-    // default selected time is current time (rounded to nearest quarter)
-    this.buildTimeSlots();
+    // set default search time to current time (user can change to any time)
     const now = new Date();
-    const roundedM = Math.ceil(now.getMinutes() / 15) * 15;
-    if (roundedM === 60) { now.setHours(now.getHours() + 1); now.setMinutes(0); }
-    else { now.setMinutes(roundedM); }
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
     this.selectedTime = `${hh}:${mm}`;
@@ -39,31 +39,48 @@ export class ViewRidesComponent implements OnInit {
   }
 
   private loadCities() {
-    this.http.get<string[]>('/assets/india-cities.json').subscribe({ next: data => { this.cities = data || []; this.filteredOrigins = this.cities; this.filteredDestinations = this.cities; }, error: () => { this.cities = []; } });
+    this.http.get<string[]>('/assets/india-cities.json').subscribe({
+      next: data => {
+        this.cities = (data || []).slice().sort((a, b) => a.localeCompare(b));
+        // do not populate suggestions until user types
+        this.filteredOrigins = [];
+        this.filteredDestinations = [];
+      },
+      error: () => { this.cities = []; this.filteredOrigins = []; this.filteredDestinations = []; }
+    });
   }
 
   filterOrigins(q: string) {
-    const input = (q || '').toLowerCase();
-    this.filteredOrigins = this.cities.filter(c => c.toLowerCase().includes(input)).slice(0, 20);
+    const input = (q || '').toLowerCase().trim();
+    if (!input) {
+      this.filteredOrigins = [];
+      return;
+    }
+    const matches = this.cities.filter(c => c.toLowerCase().includes(input));
+    if (matches.length === 0) {
+      this.filteredOrigins = ['No location found'];
+    } else {
+      this.filteredOrigins = matches.slice(0, 3);
+    }
   }
 
   filterDestinations(q: string) {
-    const input = (q || '').toLowerCase();
-    this.filteredDestinations = this.cities.filter(c => c.toLowerCase().includes(input)).slice(0, 20);
+    const input = (q || '').toLowerCase().trim();
+    if (!input) {
+      this.filteredDestinations = [];
+      return;
+    }
+    const matches = this.cities.filter(c => c.toLowerCase().includes(input));
+    if (matches.length === 0) {
+      this.filteredDestinations = ['No location found'];
+    } else {
+      this.filteredDestinations = matches.slice(0, 3);
+    }
   }
 
-  private buildTimeSlots() {
-    const slots: string[] = [];
-    for (let h = 0; h < 24; h++) {
-      for (let m = 0; m < 60; m += 15) {
-        slots.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
-      }
-    }
-    this.timeSlots = slots;
-  }
 
   reload(applyFilters = false) {
-    // only today's rides
+    // grab rides that were created today only
     this.all = this.rides.getTodayRides();
     if (applyFilters) {
       this.applyFilters();
@@ -74,7 +91,7 @@ export class ViewRidesComponent implements OnInit {
 
   applyFilters() {
     const bufferMins = 60;
-    // use selectedTime (HH:mm) as the center for buffer comparison
+    // treat selectedTime as center and allow +/- buffer minutes around it
     const [selH, selM] = (this.selectedTime || '00:00').split(':').map(s => Number(s.trim()));
     const base = new Date();
     base.setHours(selH, selM, 0, 0);
@@ -92,7 +109,7 @@ export class ViewRidesComponent implements OnInit {
   }
 
   formattedTime(t: string) {
-    // show as "HH : mm"
+    // display time with space around colon for readability
     const parts = (t || '').split(':');
     if (parts.length < 2) { return t; }
     return `${parts[0].padStart(2,'0')} : ${parts[1].padStart(2,'0')}`;

@@ -1,3 +1,8 @@
+/*
+ * RideDetailsComponent
+ * small modal showing ride data with book/close actions.
+ * Hand‑coded for clarity and ease of tweaking.
+ */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Ride } from '../../models/ride.model';
 import { AuthService } from '../../services/auth.service';

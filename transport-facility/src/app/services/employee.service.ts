@@ -1,3 +1,8 @@
+/*
+ * EmployeeService
+ * keeps a list of valid employee IDs (loaded from assets with a fallback).
+ * Code written by hand; straight forward and easy to follow.
+ */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 

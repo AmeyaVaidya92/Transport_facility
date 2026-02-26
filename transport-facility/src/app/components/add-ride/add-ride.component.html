@@ -1,50 +1,146 @@
-<div style="max-width:640px;margin:40px auto;padding:16px;border:1px solid #eee;border-radius:6px;">
+<div class="form-container">
   <h2>Add Ride</h2>
+  <p class="tagline">
+    Where are you headed today? Share your journey and help colleagues travel smarter.
+  </p>
+
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <div style="display:flex;gap:8px;margin-top:8px;">
-      <label>Vehicle Type
+
+    <!-- Vehicle Type -->
+    <div class="row">
+      <label class="field">
+        <span class="label-text">
+          Vehicle Type <span class="required">*</span>
+        </span>
         <select formControlName="vehicleType">
           <option *ngFor="let t of vehicleTypes">{{ t }}</option>
         </select>
       </label>
-      <label>Vehicle No
-        <input formControlName="vehicleNo" placeholder="e.g. MH34VB1000" />
-        <div *ngIf="form.get('vehicleNo')?.touched && form.get('vehicleNo')?.invalid" style="color:#b00020;font-size:12px;margin-top:4px;">
-          <span *ngIf="form.get('vehicleNo')?.errors?.['required']">Vehicle number is required.</span>
-          <span *ngIf="form.get('vehicleNo')?.errors?.['pattern']">Invalid format. Example: MH34VB1000</span>
+    </div>
+
+    <!-- Vehicle Number + Seats -->
+    <div class="row">
+      <label class="field flex-1">
+        <span class="label-text">
+          Vehicle Number <span class="required">*</span>
+        </span>
+        <input
+          formControlName="vehicleNo"
+          placeholder="e.g. MH34VB1000"
+          [class.field-error]="form.get('vehicleNo')?.touched && form.get('vehicleNo')?.invalid"
+        />
+        <div
+          *ngIf="form.get('vehicleNo')?.touched && form.get('vehicleNo')?.invalid"
+          class="error-msg"
+        >
+          <span *ngIf="form.get('vehicleNo')?.errors?.['required']">
+            Vehicle number is required.
+          </span>
+          <span *ngIf="form.get('vehicleNo')?.errors?.['pattern']">
+            Invalid format. Example: MH34VB1000
+          </span>
+          <span *ngIf="form.get('vehicleNo')?.errors?.['maxlength']">
+            Max 10 characters allowed
+          </span>
         </div>
       </label>
-      <label>Vacant Seats
-        <input type="number" formControlName="vacantSeats" />
-        <div *ngIf="form.get('vacantSeats')?.errors?.['max']">Must be less than 10</div>
+
+      <label class="field flex-1">
+        <span class="label-text">
+          How Many Seats? <span class="required">*</span>
+        </span>
+        <input
+          type="text"
+          formControlName="vacantSeats"
+          placeholder="1 to 10"
+          [class.field-error]="form.get('vacantSeats')?.touched && form.get('vacantSeats')?.invalid"
+        />
+        <div
+          *ngIf="form.get('vacantSeats')?.touched && form.get('vacantSeats')?.invalid"
+          class="error-msg"
+        >
+          <span *ngIf="form.get('vacantSeats')?.errors?.['required']">
+            Number of seats is required.
+          </span>
+          <span *ngIf="form.get('vacantSeats')?.errors?.['min']">
+            Must be at least 1 seat
+          </span>
+          <span *ngIf="form.get('vacantSeats')?.errors?.['max']">
+            Maximum 10 seats allowed
+          </span>
+        </div>
       </label>
     </div>
 
-    <div style="margin-top:8px;">
-      <label>Time (HH:mm)</label>
-      <select formControlName="time">
-        <option *ngFor="let s of timeSlots">{{ s }}</option>
-      </select>
+    <!-- Time -->
+    <div class="field-group">
+      <label class="field">
+        <span class="label-text">
+          Time (HH:mm) <span class="required">*</span>
+        </span>
+        <input
+          type="time"
+          formControlName="time"
+          (focus)="openTimePicker($event)"
+          [class.field-error]="form.get('time')?.touched && form.get('time')?.invalid"
+        />
+      </label>
     </div>
 
-    <div style="margin-top:8px;display:flex;gap:8px;">
-      <label style="flex:1">Pick-up
-        <input formControlName="pickUp" (input)="filterPickups($any($event.target).value)" list="pickup-list" />
+    <!-- Pickup & Destination -->
+    <div class="row pickup-dest-group">
+      <label class="field flex-1">
+        <span class="label-text">
+          Where will you start? <span class="required">*</span>
+        </span>
+        <input
+          formControlName="pickUp"
+          (input)="filterPickups($any($event.target).value)"
+          list="pickup-list"
+          placeholder="City name"
+          [class.field-error]="form.get('pickUp')?.touched && form.get('pickUp')?.invalid"
+        />
         <datalist id="pickup-list">
-          <option *ngFor="let c of filteredPickups" [value]="c"></option>
+          <option *ngFor="let c of filteredPickups" [value]="c" [disabled]="c === 'No location found'"></option>
         </datalist>
       </label>
-      <label style="flex:1">Destination
-        <input formControlName="destination" (input)="filterDestinations($any($event.target).value)" list="dest-list" />
+
+      <button
+        type="button"
+        class="swap-btn"
+        title="Swap pickup/destination"
+        (click)="swapCities()"
+      >
+        ⇄
+      </button>
+
+      <label class="field flex-1">
+        <span class="label-text">
+          Where are you going? <span class="required">*</span>
+        </span>
+        <input
+          formControlName="destination"
+          (input)="filterDestinations($any($event.target).value)"
+          list="dest-list"
+          placeholder="City name"
+          [class.field-error]="form.get('destination')?.touched && form.get('destination')?.invalid"
+        />
         <datalist id="dest-list">
-          <option *ngFor="let c of filteredDestinations" [value]="c"></option>
+          <option *ngFor="let c of filteredDestinations" [value]="c" [disabled]="c === 'No location found'"></option>
         </datalist>
       </label>
     </div>
 
-    <div style="margin-top:12px;">
-      <button type="submit" [disabled]="form.invalid">Add Ride</button>
-      <small *ngIf="form.invalid" style="margin-left:8px;color:#666">Fill all mandatory fields correctly</small>
+    <!-- Submit -->
+    <div class="field-group">
+      <button
+        type="submit"
+        [ngClass]="{ 'btn-enabled': form.valid, 'btn-disabled': form.invalid }"
+        [disabled]="form.invalid"
+      >
+        Post My Ride
+      </button>
     </div>
+
   </form>
 </div>

@@ -1,3 +1,8 @@
+/*
+ * RideService
+ * stores rides in localStorage and handles simple business logic.
+ * Built by hand, so you can read and understand the intent easily.
+ */
 import { Injectable } from '@angular/core';
 import { Ride } from '../models/ride.model';
 
@@ -15,7 +20,7 @@ export class RideService {
     try {
       const raw = localStorage.getItem(STORAGE);
       this.rides = raw ? JSON.parse(raw) : [];
-      // seed some default rides for demo if none present
+      // if we didn't find any rides yet, add a few examples so the UI isn't empty
       if (!this.rides || this.rides.length === 0) {
         const now = new Date();
         const fmt = (d: Date) => `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
@@ -58,7 +63,7 @@ export class RideService {
 
   addRide(ride: Omit<Ride, 'id' | 'createdAt' | 'bookings'>): { ok: boolean; message?: string } {
     const today = new Date().toDateString();
-    // business rule: one ride per employee per day
+    // simple rule we've chosen: an employee can only offer one ride per day
     const exists = this.rides.find(r => r.creatorId === ride.creatorId && new Date(r.createdAt).toDateString() === today);
     if (exists) {
       return { ok: false, message: 'Employee already created a ride today.' };
@@ -87,7 +92,7 @@ export class RideService {
     return { ok: true };
   }
 
-  // helper to return rides created today
+  // grab only the rides that were added today (useful for filtering)
   getTodayRides(): Ride[] {
     const today = new Date().toDateString();
     return this.rides.filter(r => new Date(r.createdAt).toDateString() === today);

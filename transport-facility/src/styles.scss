@@ -1,1 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global app background and base styles */
+html, body {
+	height: 100%;
+	margin: 0;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	/* gentle blue gradient reminiscent of travel apps */
+	background: linear-gradient(180deg, #e6f0ff 0%, #f7fbff 35%, #ffffff 100%);
+
+//   background: linear-gradient(
+//     135deg,
+//     #e3f2fd 0%,
+//     #bbdefb 50%,
+//     #90caf9 100%
+//   );
+
+	background-attachment: fixed;
+
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* make app root take full height so pages can center content */
+app-root {
+	display: block; min-height: 100vh; padding-bottom: 24px;
+}
+

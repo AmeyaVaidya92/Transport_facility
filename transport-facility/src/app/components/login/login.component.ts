@@ -1,3 +1,8 @@
+/*
+ * LoginComponent
+ * very simple login form for employee ID.
+ * Hand‑crafted and intentionally minimal.
+ */
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';

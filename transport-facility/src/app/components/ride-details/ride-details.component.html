@@ -10,7 +10,7 @@
     <p>Bookings: {{ ride.bookings.length }}</p>
   </div>
 
-  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+  <div class="actions">
     <button (click)="onClose()">Close</button>
     <button [disabled]="!canBook()" (click)="doBook()">Book</button>
   </div>
