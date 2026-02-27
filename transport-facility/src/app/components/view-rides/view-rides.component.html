@@ -13,14 +13,14 @@
   <div class="search-panel">
     <label class="search-field">Origin
       <input [(ngModel)]="origin" (input)="filterOrigins($any($event.target).value)" list="origin-list" placeholder="Start city" />
-      <datalist >
-        <option *ngFor="let c of filteredOrigins" [value]="c" [disabled]="c==='No location found'"></option>
+      <datalist id="origin-list">
+        <option *ngFor="let item of filteredOrigins" [value]="item" [disabled]="item==='No location found'"></option>
       </datalist>
     </label>
     <label class="search-field">Destination
       <input [(ngModel)]="destination" (input)="filterDestinations($any($event.target).value)" list="dest-list" placeholder="Destination city" />
       <datalist id="dest-list">
-        <option *ngFor="let c of filteredDestinations" [value]="c" [disabled]="c==='No location found'"></option>
+        <option *ngFor="let item of filteredDestinations" [value]="item" [disabled]="item==='No location found'"></option>
       </datalist>
     </label>
     <label>Vehicle
@@ -41,17 +41,17 @@
 
   <div *ngIf="displayed.length === 0" class="no-rides">No rides to show.</div>
 
-  <div *ngFor="let r of displayed" class="ride-card" (click)="openDetails(r)">
+  <div *ngFor="let ride of displayed" class="ride-card" (click)="openDetails(ride)">
     <div class="card-left">
-      <strong>{{ r.vehicleType }} - {{ r.vehicleNo }}</strong>
-      <div>By: {{ r.creatorId }}</div>
-      <div>From: {{ r.pickUp }} → {{ r.destination }}</div>
+      <strong>{{ ride.vehicleType }} - {{ ride.vehicleNo }}</strong>
+      <div>By: {{ ride.creatorId }}</div>
+      <div>From: {{ ride.pickUp }} -> {{ ride.destination }}</div>
     </div>
     <div class="card-right">
-      <div class="time">{{ formattedTime(r.time) }}</div>
-      <div class="seats">Seats: {{ r.vacantSeats }}</div>
+      <div class="time">{{ formattedTime(ride.time) }}</div>
+      <div class="seats">Seats: {{ ride.vacantSeats }}</div>
       <div class="book-button-wrapper">
-        <button (click)="book(r); $event.stopPropagation()" [disabled]="!canBook(r)">Book</button>
+        <button (click)="book(ride); $event.stopPropagation()" [disabled]="!canBook(ride)">Book</button>
       </div>
     </div>
   </div>

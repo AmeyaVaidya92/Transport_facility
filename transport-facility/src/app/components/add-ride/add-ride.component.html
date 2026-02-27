@@ -13,7 +13,7 @@
           Vehicle Type <span class="required">*</span>
         </span>
         <select formControlName="vehicleType">
-          <option *ngFor="let t of vehicleTypes">{{ t }}</option>
+          <option *ngFor="let type of vehicleTypes">{{ type }}</option>
         </select>
       </label>
     </div>
@@ -101,7 +101,7 @@
           [class.field-error]="form.get('pickUp')?.touched && form.get('pickUp')?.invalid"
         />
         <datalist id="pickup-list">
-          <option *ngFor="let c of filteredPickups" [value]="c" [disabled]="c === 'No location found'"></option>
+          <option *ngFor="let item of filteredPickups" [value]="item" [disabled]="item === 'No location found'"></option>
         </datalist>
       </label>
 
@@ -126,7 +126,7 @@
           [class.field-error]="form.get('destination')?.touched && form.get('destination')?.invalid"
         />
         <datalist id="dest-list">
-          <option *ngFor="let c of filteredDestinations" [value]="c" [disabled]="c === 'No location found'"></option>
+          <option *ngFor="let item of filteredDestinations" [value]="item" [disabled]="item === 'No location found'"></option>
         </datalist>
       </label>
     </div>
